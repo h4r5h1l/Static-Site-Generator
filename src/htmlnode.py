@@ -1,3 +1,5 @@
+from textnode import TextNode, TextType
+
 class HtmlNode:
     def __init__(self, tag: str=None, value: str=None, children: list["HtmlNode"]=None, props: dict[str, str]=None):
         self.tag = tag
@@ -20,6 +22,22 @@ class HtmlNode:
         
     def props_to_html(self):
         return " ".join(f'{key}="{value}"' for key, value in self.props.items())
+    
+    def text_node_to_html_node(text_node: TextNode) -> str:    
+        if text_node.text_type == TextType.PLAIN:
+            return text_node.text
+        elif text_node.text_type == TextType.LINK:
+            return f'<a href="{text_node.url}">{text_node.text}</a>'
+        elif text_node.text_type == TextType.BOLD:
+            return f'<strong>{text_node.text}</strong>'
+        elif text_node.text_type == TextType.ITALIC:
+            return f'<em>{text_node.text}</em>'
+        elif text_node.text_type == TextType.CODE:
+            return f'<code>{text_node.text}</code>'
+        elif text_node.text_type == TextType.IMAGE:
+            return f'<img src="{text_node.url}" alt="{text_node.text}"/>'
+        else:
+            raise ValueError("Unknown TextType")
     
     def __repr__(self):
         return f"HtmlNode(tag={self.tag}, value={self.value}, children={self.children}, props={self.props})"
