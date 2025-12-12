@@ -24,7 +24,7 @@ class HtmlNode:
         return " ".join(f'{key}="{value}"' for key, value in self.props.items())
     
     def text_node_to_html_node(text_node: TextNode) -> str:    
-        if text_node.text_type == TextType.PLAIN:
+        if text_node.text_type == TextType.TEXT:
             return text_node.text
         elif text_node.text_type == TextType.LINK:
             return f'<a href="{text_node.url}">{text_node.text}</a>'

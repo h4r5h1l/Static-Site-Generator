@@ -23,7 +23,7 @@ class TestHtmlNode(unittest.TestCase):
 
     def test_text_node_to_html_node(self):
         
-        text_node_plain = TextNode("Hello", TextType.PLAIN)
+        text_node_plain = TextNode("Hello", TextType.TEXT)
         self.assertEqual(HtmlNode.text_node_to_html_node(text_node_plain), "Hello")
         
         text_node_link = TextNode("Click here", TextType.LINK, "https://example.com")
