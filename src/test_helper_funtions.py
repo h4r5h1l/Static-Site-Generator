@@ -129,6 +129,8 @@ class TestHelperFunctions(unittest.TestCase):
                 LeafNode(tag="strong", value="bold", props={}),
                 LeafNode(tag=None, value=" text with a ", props={}),
                 LeafNode(tag="a", value="link", props={"href": "https://example.com"})
+            ,
+                LeafNode(tag=None, value=".", props={})
             ], props={})
         ]
         self.assertEqual(result.children, expected_html_nodes) 
