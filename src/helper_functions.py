@@ -1,4 +1,7 @@
-from textnode import TextNode, TextType
+from textnode import *
+from blocktype import BlockType, block_to_blocktype
+from htmlnode import *
+
 import re
 
 def split_nodes_delimeter(old_nodes, delimeter, text_type):
@@ -74,3 +77,61 @@ def text_to_textnodes(text):
     new_nodes = split_nodes_image(new_nodes)
     new_nodes = split_nodes_link(new_nodes)
     return new_nodes
+
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
+    return [block.strip() for block in blocks if block.strip()]
+
+def text_to_children(text):
+    text_nodes = text_to_textnodes(text)
+    children = [TextNode.text_node_to_html_node(tn) for tn in text_nodes]
+    return children
+
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    html_nodes = []
+    for block in blocks:
+        block_type = block_to_blocktype(block)
+        if block_type == BlockType.HEADING:
+            count = len(re.match(r"^#+", block).group())
+            tag = f"h{count}"
+            value = block[count:].strip()
+            children = text_to_children(value)
+            html_nodes.append(ParentNode(tag=tag, children=children))
+        elif block_type == BlockType.PARAGRAPH:
+            children = text_to_children(block)
+            html_nodes.append(ParentNode(tag="p", children=children))
+        elif block_type == BlockType.UNORDERED_LIST:
+            list_items = block.splitlines()
+            li_nodes = []
+            for item in list_items:
+                item_text = item.lstrip("- ").strip()
+                item_children = text_to_children(item_text)
+                li_nodes.append(ParentNode(tag="li", children=item_children))
+            html_nodes.append(ParentNode(tag="ul", children=li_nodes))
+        elif block_type == BlockType.ORDERED_LIST:
+            list_items = block.splitlines()
+            li_nodes = []
+            for item in list_items:
+                item_text = re.sub(r"^\d+\.\s+", "", item).strip()
+                item_children = text_to_children(item_text)
+                li_nodes.append(ParentNode(tag="li", children=item_children))
+            html_nodes.append(ParentNode(tag="ol", children=li_nodes))
+        elif block_type == BlockType.CODE:
+            code_content = "\n".join(block.splitlines()[1:-1])
+            code_node = LeafNode(tag="code", value=code_content)
+            html_nodes.append(ParentNode(tag="pre", children=[code_node]))
+
+        elif block_type == BlockType.QUOTE:
+            quote_lines = block.splitlines()
+            quote_text = "\n".join(line.lstrip("> ").strip() for line in quote_lines)
+            children = text_to_children(quote_text)
+            html_nodes.append(ParentNode(tag="blockquote", children=children))
+    return ParentNode(tag="div", children=html_nodes, props={})
+
+                
+if __name__ == "__main__":
+    markdown = "# This is a heading\n\n       \n\n    This is a paragraph of text. It has some **bold** and _italic_ words inside of it.\n\n- This is the first list item in a list block\n- This is a list item\n- This is another list item"
+
+    html_tree = markdown_to_html_node(markdown)
+    print(html_tree.to_html())

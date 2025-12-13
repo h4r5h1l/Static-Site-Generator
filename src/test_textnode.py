@@ -1,5 +1,5 @@
 import unittest
-
+from htmlnode import HtmlNode
 from textnode import TextNode, TextType
 
 
@@ -23,7 +23,25 @@ class TestTextNode(unittest.TestCase):
     def test_neq_type(self):
         self.assertNotEqual(self.node.text_type, self.node3.text_type)
         
+    def test_text_node_to_html_node(self):
+        
+        text_node_plain = TextNode("Hello", TextType.TEXT)
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_plain), HtmlNode(tag=None, value="Hello", children=[], props={}))
+        
+        text_node_link = TextNode("Click here", TextType.LINK, "https://example.com")
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_link), HtmlNode(tag="a", value="Click here", children=[], props={"href": "https://example.com"}))
+        
+        text_node_bold = TextNode("Bold Text", TextType.BOLD)
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_bold), HtmlNode(tag="strong", value="Bold Text", children=[], props={}))
+        
+        text_node_italic = TextNode("Italic Text", TextType.ITALIC)
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_italic), HtmlNode(tag="em", value="Italic Text", children=[], props={}))
 
+        text_node_code = TextNode("Code Snippet", TextType.CODE)
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_code), HtmlNode(tag="code", value="Code Snippet", children=[], props={}))
+        
+        text_node_image = TextNode("Image Alt", TextType.IMAGE, "https://example.com/image.png")
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_image), HtmlNode(tag="img", value=None, children=[], props={"src": "https://example.com/image.png", "alt": "Image Alt"}))
 
 if __name__ == "__main__":
     unittest.main()
