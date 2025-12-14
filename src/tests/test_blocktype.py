@@ -1,4 +1,4 @@
-from blocktype import BlockType, block_to_blocktype
+from src.blocktype import BlockType, block_to_blocktype
 import unittest
 
 class TestBlockType(unittest.TestCase):

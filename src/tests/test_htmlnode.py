@@ -1,6 +1,6 @@
 import unittest
-from htmlnode import HtmlNode, ParentNode, LeafNode
-from textnode import TextNode, TextType
+from src.htmlnode import HtmlNode, ParentNode, LeafNode
+from src.textnode import TextNode, TextType
 
 class TestHtmlNode(unittest.TestCase):
     def test_initialization(self):

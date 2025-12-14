@@ -10,6 +10,15 @@ class HtmlNode:
         # Child classes should override this method to render themselves as HTML.
     def props_to_html(self):
         return " ".join(f'{key}="{value}"' for key, value in self.props.items())
+    
+    @staticmethod
+    def text_node_to_html_node(text_node):
+        # Convert a TextNode to its HTML string representation
+        from src.textnode import TextNode
+        node = TextNode.text_node_to_html_node(text_node)
+        if isinstance(node, HtmlNode):
+            return node.to_html()
+        return str(node)
 
     def __eq__(self, other):
         if not isinstance(other, HtmlNode):
@@ -47,10 +56,22 @@ class LeafNode(HtmlNode):
         super().__init__(tag=tag, value=value, props=props)
         
     def to_html(self) -> str:
-        if self.value is None:
-            raise(ValueError("LeafNode must have a value."))
+        # If no tag, it must have a value and return plain text
         if self.tag is None:
+            if self.value is None:
+                raise(ValueError("LeafNode must have a value."))
             return self.value
+
+        # If tag is present but value is None, render as self-closing only for void elements
+        if self.value is None:
+            void_tags = {"img", "br", "hr", "input", "meta", "link"}
+            if self.tag in void_tags:
+                if self.props:
+                    return f"<{self.tag} {self.props_to_html()}/>"
+                return f"<{self.tag}/>"
+            raise(ValueError("LeafNode must have a value."))
+
+        # Normal tag with value
         if not self.props:
             return f"<{self.tag}>{self.value}</{self.tag}>"
         return f"<{self.tag} {self.props_to_html()}>".strip() + self.value + f"</{self.tag}>"

@@ -1,5 +1,5 @@
 from enum import Enum
-from htmlnode import HtmlNode, LeafNode
+from src.htmlnode import LeafNode
 class TextType(Enum):
     TEXT = "text"
     BOLD = "bold"
@@ -28,9 +28,9 @@ class TextNode:
         elif text_node.text_type == TextType.LINK:
             return LeafNode(tag="a", value=text_node.text, props={"href": text_node.url})    
         elif text_node.text_type == TextType.BOLD:
-            return LeafNode(tag="strong", value=text_node.text)
+            return LeafNode(tag="b", value=text_node.text)
         elif text_node.text_type == TextType.ITALIC:
-            return LeafNode(tag="em", value=text_node.text)
+            return LeafNode(tag="i", value=text_node.text)
         elif text_node.text_type == TextType.CODE:
             return LeafNode(tag="code", value=text_node.text)
         elif text_node.text_type == TextType.IMAGE:
@@ -38,3 +38,4 @@ class TextNode:
         else:
             raise ValueError("Unknown TextType")
         
+    

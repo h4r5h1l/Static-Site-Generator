@@ -1,6 +1,6 @@
 import unittest
-from htmlnode import HtmlNode
-from textnode import TextNode, TextType
+from src.htmlnode import HtmlNode
+from src.textnode import TextNode, TextType
 
 
 class TestTextNode(unittest.TestCase):
@@ -32,10 +32,10 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(TextNode.text_node_to_html_node(text_node_link), HtmlNode(tag="a", value="Click here", children=[], props={"href": "https://example.com"}))
         
         text_node_bold = TextNode("Bold Text", TextType.BOLD)
-        self.assertEqual(TextNode.text_node_to_html_node(text_node_bold), HtmlNode(tag="strong", value="Bold Text", children=[], props={}))
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_bold), HtmlNode(tag="b", value="Bold Text", children=[], props={}))
         
         text_node_italic = TextNode("Italic Text", TextType.ITALIC)
-        self.assertEqual(TextNode.text_node_to_html_node(text_node_italic), HtmlNode(tag="em", value="Italic Text", children=[], props={}))
+        self.assertEqual(TextNode.text_node_to_html_node(text_node_italic), HtmlNode(tag="i", value="Italic Text", children=[], props={}))
 
         text_node_code = TextNode("Code Snippet", TextType.CODE)
         self.assertEqual(TextNode.text_node_to_html_node(text_node_code), HtmlNode(tag="code", value="Code Snippet", children=[], props={}))
