@@ -10,7 +10,7 @@ class HtmlNode:
         # Child classes should override this method to render themselves as HTML.
     def props_to_html(self):
         return " ".join(f'{key}="{value}"' for key, value in self.props.items())
-    
+
     def __eq__(self, other):
         if not isinstance(other, HtmlNode):
             return False
@@ -20,7 +20,7 @@ class HtmlNode:
             self.children == other.children and
             self.props == other.props
         )
-    
+
     def __repr__(self):
         return f"HtmlNode(tag={self.tag}, value={self.value}, children={self.children}, props={self.props})"
 

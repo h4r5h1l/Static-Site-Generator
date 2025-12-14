@@ -51,6 +51,7 @@ class TestParentNode(unittest.TestCase):
         self.assertEqual(repr(parent), "ParentNode(tag=section, children=[LeafNode(tag=p, value=Text, props={})], props={'id': 'main'})")
         
 
+
 class TestLeafNode(unittest.TestCase):
     def test_to_html_with_tag_and_value(self):
         node = LeafNode(tag="p", value="Hello, World!")
@@ -72,6 +73,24 @@ class TestLeafNode(unittest.TestCase):
     def test_repr(self):
         node = LeafNode(tag="span", value="Text", props={"class": "highlight"})
         self.assertEqual(repr(node), "LeafNode(tag=span, value=Text, props={'class': 'highlight'})")
+
+        text_node_plain = TextNode("Hello", TextType.TEXT)
+        self.assertEqual(HtmlNode.text_node_to_html_node(text_node_plain), "Hello")
+        
+        text_node_link = TextNode("Click here", TextType.LINK, "https://example.com")
+        self.assertEqual(HtmlNode.text_node_to_html_node(text_node_link), '<a href="https://example.com">Click here</a>')
+        
+        text_node_bold = TextNode("Bold Text", TextType.BOLD)
+        self.assertEqual(HtmlNode.text_node_to_html_node(text_node_bold), '<b>Bold Text</b>')
+        
+        text_node_italic = TextNode("Italic Text", TextType.ITALIC)
+        self.assertEqual(HtmlNode.text_node_to_html_node(text_node_italic), '<i>Italic Text</i>')
+        
+        text_node_code = TextNode("Code Snippet", TextType.CODE)
+        self.assertEqual(HtmlNode.text_node_to_html_node(text_node_code), '<code>Code Snippet</code>')
+        
+        text_node_image = TextNode("Image Alt", TextType.IMAGE, "https://example.com/image.png")
+        self.assertEqual(HtmlNode.text_node_to_html_node(text_node_image), '<img src="https://example.com/image.png" alt="Image Alt"/>')
 
 if __name__ == "__main__":
     unittest.main()
