@@ -6,19 +6,11 @@ class HtmlNode:
         self.props = props if props is not None else {}
         
     def to_html(self) -> str:
-        raise NotImplementedError("to_html method is not implemented yet.")
         # Child classes should override this method to render themselves as HTML.
+        raise NotImplementedError("to_html method is not implemented yet.")
+        
     def props_to_html(self):
         return " ".join(f'{key}="{value}"' for key, value in self.props.items())
-    
-    @staticmethod
-    def text_node_to_html_node(text_node):
-        # Convert a TextNode to its HTML string representation
-        from src.textnode import TextNode
-        node = TextNode.text_node_to_html_node(text_node)
-        if isinstance(node, HtmlNode):
-            return node.to_html()
-        return str(node)
 
     def __eq__(self, other):
         if not isinstance(other, HtmlNode):
