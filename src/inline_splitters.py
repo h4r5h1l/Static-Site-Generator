@@ -1,5 +1,5 @@
 import re
-from src.textnode import *
+from .textnode import *
 def split_nodes_delimeter(old_nodes, delimeter, text_type):
     new_nodes = []
     for node in old_nodes:

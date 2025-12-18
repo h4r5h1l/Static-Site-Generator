@@ -11,8 +11,8 @@ class TestMarkdownToHTML(unittest.TestCase):
         ]
         result = markdown_to_blocks(markdown)
         self.assertEqual(result, expected_blocks)
-        
-    def test_markdown_to_html_node(self):
+
+    def test_markdown_to_html(self):
         markdown = "# Heading\n\nThis is a **bold** text with a [link](https://example.com)."
         result = markdown_to_html(markdown)
         expected_html_nodes = [
