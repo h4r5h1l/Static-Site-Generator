@@ -1,1 +1,1 @@
-python3 -m src/main "/https://github.com/h4r5h1l/Static-Site-Generator/"
+python3 -m src/main.py "/https://github.com/h4r5h1l/Static-Site-Generator/"
