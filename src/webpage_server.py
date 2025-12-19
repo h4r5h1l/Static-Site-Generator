@@ -33,7 +33,7 @@ def extract_title(markdown):
             return line[2:].strip()
     raise ValueError("No title found in markdown")
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(basepath, from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path}")
     with open(from_path, "r") as f:
         markdown = f.read()
@@ -47,6 +47,8 @@ def generate_page(from_path, template_path, dest_path):
     with open(template_path, "r") as f:
         template = f.read()
         page = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+        # prefix absolute-rooted href/src with basepath
+        page = page.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
 
     # ensure destination directory exists
     dest_dir = os.path.dirname(dest_path)
@@ -59,7 +61,7 @@ def generate_page(from_path, template_path, dest_path):
     # Return the generated page HTML string so callers (and tests) can inspect it
     return page
 
-def generate_pages_recursively(dir_path_content, template_path, dest_dir_path, return_map: bool = False):
+def generate_pages_recursively(basepath,dir_path_content, template_path, dest_dir_path, return_map: bool = False):
     """Recursively generate pages from markdown files under `dir_path_content`.
 
     Args:
@@ -81,12 +83,12 @@ def generate_pages_recursively(dir_path_content, template_path, dest_dir_path, r
         if dir_file.endswith(".md"):
             dest_path = os.path.join(dest_dir_path, dir_file.replace(".md", ".html"))
             # generate and record the output path
-            generate_page(src_path, template_path, dest_path)
+            generate_page(basepath, src_path, template_path, dest_path)
             generated.append(dest_path)
             mapping[src_path] = dest_path
         elif os.path.isdir(src_path):
             # recurse into subdirectory and collect generated files
-            sub_generated = generate_pages_recursively(src_path, template_path, os.path.join(dest_dir_path, dir_file), return_map=return_map)
+            sub_generated = generate_pages_recursively(basepath, src_path, template_path, os.path.join(dest_dir_path, dir_file), return_map=return_map)
             if return_map:
                 # sub_generated is a mapping
                 mapping.update(sub_generated)

@@ -1,7 +1,13 @@
-from src.webpage_server import cp_static_to_public, generate_page, generate_pages_recursively
+import sys
+from .webpage_server import generate_pages_recursively, cp_static_to_public
+
 def main():
+    if len(sys.argv) < 2:
+        basepath = "/"
+    else:
+        basepath = sys.argv[1]
     cp_static_to_public("static", "public")
-    generate_pages_recursively("content", "content/template.html", "public")
+    generate_pages_recursively(basepath, "content", "content/template.html", "public")
 
 if __name__ == "__main__":
     main()
